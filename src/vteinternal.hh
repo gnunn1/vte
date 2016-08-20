@@ -1181,6 +1181,8 @@ public:
                          vte::grid::row_t end_row);
         void select_empty(vte::grid::column_t col,
                           vte::grid::row_t row);
+
+        void emit_terminal_screen_changed(int screen);
 };
 
 extern GTimer *process_timer;

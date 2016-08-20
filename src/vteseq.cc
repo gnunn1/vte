@@ -202,6 +202,12 @@ VteTerminalPrivate::emit_resize_window(guint columns,
         g_signal_emit(m_terminal, signals[SIGNAL_RESIZE_WINDOW], 0, columns, rows);
 }
 
+void
+VteTerminalPrivate::emit_terminal_screen_changed(int screen)
+{
+        _vte_debug_print(VTE_DEBUG_SIGNALS, "Emitting `terminal_screen_changed'.\n");
+        g_signal_emit(m_terminal, signals[SIGNAL_TERMINAL_SCREEN_CHANGED], 0, screen);
+}
 
 /* Some common functions */
 
@@ -380,6 +386,9 @@ void
 VteTerminalPrivate::seq_normal_screen()
 {
         seq_switch_screen(&m_normal_screen);
+
+        /* Emit signal */
+        emit_terminal_screen_changed(0);
 }
 
 void
@@ -407,6 +416,9 @@ void
 VteTerminalPrivate::seq_alternate_screen()
 {
         seq_switch_screen(&m_alternate_screen);
+
+        /* Emit signal */
+        emit_terminal_screen_changed(1);
 }
 
 /* Switch to normal screen and restore cursor (in this order). */

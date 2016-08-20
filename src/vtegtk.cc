@@ -687,6 +687,8 @@ vte_terminal_class_init(VteTerminalClass *klass)
 
         klass->bell = NULL;
 
+        klass->terminal_screen_changed = NULL;
+
         /* GtkScrollable interface properties */
         g_object_class_override_property (gobject_class, PROP_HADJUSTMENT, "hadjustment");
         g_object_class_override_property (gobject_class, PROP_VADJUSTMENT, "vadjustment");
@@ -1204,6 +1206,23 @@ vte_terminal_class_init(VteTerminalClass *klass)
                              NULL,
                              g_cclosure_marshal_VOID__VOID,
                              G_TYPE_NONE, 0);
+
+        /**
+         * VteTerminal::screen-changed:
+         * @vteterminal: the object which received the signal
+         *
+         * This signal is emitted when the terminal screen changes between
+         * normal and alternate screen.
+         */
+        signals[SIGNAL_TERMINAL_SCREEN_CHANGED] =
+                g_signal_new(I_("terminal-screen-changed"),
+                             G_OBJECT_CLASS_TYPE(klass),
+                             G_SIGNAL_RUN_LAST,
+                             G_STRUCT_OFFSET(VteTerminalClass, bell),
+                             NULL,
+                             NULL,
+                             g_cclosure_marshal_VOID__VOID,
+                             G_TYPE_NONE, 1, G_TYPE_INT);
 
         /**
          * VteTerminal:allow-bold:

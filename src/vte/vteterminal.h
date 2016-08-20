@@ -104,6 +104,8 @@ struct _VteTerminalClass {
 
 	void (*bell)(VteTerminal* terminal);
 
+        void (*terminal_screen_changed)(VteTerminal* terminal);
+
         /* Padding for future expansion. */
         gpointer padding[16];
 
