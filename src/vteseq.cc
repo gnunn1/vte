@@ -202,6 +202,7 @@ VteTerminalPrivate::emit_resize_window(guint columns,
         g_signal_emit(m_terminal, signals[SIGNAL_RESIZE_WINDOW], 0, columns, rows);
 }
 
+/* Emit a "terminal-screen-changed" signal */
 void
 VteTerminalPrivate::emit_terminal_screen_changed(int screen)
 {

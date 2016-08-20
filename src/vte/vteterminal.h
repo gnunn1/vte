@@ -107,7 +107,7 @@ struct _VteTerminalClass {
         void (*terminal_screen_changed)(VteTerminal* terminal);
 
         /* Padding for future expansion. */
-        gpointer padding[16];
+        gpointer padding[15];
 
         VteTerminalClassPrivate *priv;
 };
