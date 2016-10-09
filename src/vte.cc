@@ -8079,6 +8079,7 @@ VteTerminalPrivate::VteTerminalPrivate(VteTerminal *t) :
 	vte_terminal_set_delete_binding(m_terminal, VTE_ERASE_AUTO);
 	m_meta_sends_escape = TRUE;
 	m_audible_bell = TRUE;
+	m_disable_bg_draw = FALSE;
 	m_bell_margin = 10;
 	m_allow_bold = TRUE;
         m_deccolm_mode = FALSE;
@@ -9723,9 +9724,11 @@ VteTerminalPrivate::widget_draw(cairo_t *cr)
 	/* Designate the start of the drawing operation and clear the area. */
 	_vte_draw_set_cairo(m_draw, cr);
 
-	_vte_draw_clear (m_draw, 0, 0,
-			 allocated_width, allocated_height,
-                         get_color(VTE_DEFAULT_BG), m_background_alpha);
+	if (!m_disable_bg_draw) {
+		_vte_draw_clear (m_draw, 0, 0,
+				 allocated_width, allocated_height,
+		                 get_color(VTE_DEFAULT_BG), m_background_alpha);
+	}
 
         /* Clip vertically, for the sake of smooth scrolling. We want the top and bottom paddings to be unused.
          * Don't clip horizontally so that antialiasing can legally overflow to the right padding. */
@@ -9945,6 +9948,17 @@ VteTerminalPrivate::set_audible_bell(bool setting)
                 return false;
 
 	m_audible_bell = setting;
+        return true;
+}
+
+bool
+VteTerminalPrivate::set_disable_bg_draw(bool setting)
+{
+        if (setting == m_disable_bg_draw)
+                return false;
+
+	m_disable_bg_draw = setting;
+	invalidate_all();
         return true;
 }
 

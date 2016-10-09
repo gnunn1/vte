@@ -389,6 +389,7 @@ public:
         VteEraseBinding m_delete_binding;
         gboolean m_meta_sends_escape;
         gboolean m_audible_bell;
+        gboolean m_disable_bg_draw;
         gboolean m_margin_bell;
         guint m_bell_margin;
         gboolean m_allow_bold;
@@ -1130,6 +1131,7 @@ public:
         bool set_cursor_shape(VteCursorShape shape);
         bool set_cursor_style(VteCursorStyle style);
         bool set_delete_binding(VteEraseBinding binding);
+        bool set_disable_bg_draw(bool setting);
         bool set_encoding(char const* codeset);
         bool set_font_desc(PangoFontDescription const* desc);
         bool set_font_scale(double scale);

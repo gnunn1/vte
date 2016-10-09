@@ -452,6 +452,13 @@ gboolean vte_terminal_write_contents_sync (VteTerminal *terminal,
                                            GCancellable *cancellable,
                                            GError **error) _VTE_GNUC_NONNULL(1) _VTE_GNUC_NONNULL(2);
 
+/* Set disable background draw. */
+_VTE_PUBLIC
+void vte_terminal_set_disable_bg_draw(VteTerminal *terminal,
+                                   gboolean is_disabled) _VTE_GNUC_NONNULL(1);
+_VTE_PUBLIC
+gboolean vte_terminal_get_disable_bg_draw(VteTerminal *terminal);
+
 G_END_DECLS
 
 #endif /* __VTE_VTE_TERMINAL_H__ */

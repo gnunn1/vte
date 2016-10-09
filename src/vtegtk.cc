@@ -458,6 +458,9 @@ vte_terminal_get_property (GObject *object,
                 case PROP_DELETE_BINDING:
                         g_value_set_enum (value, impl->m_delete_binding);
                         break;
+                case PROP_DISABLE_BG_DRAW:
+                        g_value_set_boolean (value, vte_terminal_get_disable_bg_draw (terminal));
+                        break;
                 case PROP_ENCODING:
                         g_value_set_string (value, vte_terminal_get_encoding (terminal));
                         break;
@@ -546,6 +549,9 @@ vte_terminal_set_property (GObject *object,
                         break;
                 case PROP_DELETE_BINDING:
                         vte_terminal_set_delete_binding (terminal, (VteEraseBinding)g_value_get_enum (value));
+                        break;
+                case PROP_DISABLE_BG_DRAW:
+                        vte_terminal_set_disable_bg_draw (terminal, g_value_get_boolean (value));
                         break;
                 case PROP_ENCODING:
                         vte_terminal_set_encoding (terminal, g_value_get_string (value), NULL);
@@ -1307,6 +1313,18 @@ vte_terminal_class_init(VteTerminalClass *klass)
                                    VTE_TYPE_ERASE_BINDING,
                                    VTE_ERASE_AUTO,
                                    (GParamFlags) (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY));
+
+        /**
+         * VteTerminal:disable_bg_draw:
+         *
+         * Controls whether or not the terminal will draw the background,
+         * if disabled the responsibility is deferred to the application via
+         * the draw signal
+         */
+        pspecs[PROP_DISABLE_BG_DRAW] =
+                g_param_spec_boolean ("disable-bg-draw", NULL, NULL,
+                                      TRUE,
+                                      (GParamFlags) (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY));
 
         /**
          * VteTerminal:font-scale:
@@ -3042,6 +3060,41 @@ vte_terminal_set_delete_binding(VteTerminal *terminal,
         if (IMPL(terminal)->set_delete_binding(binding))
                 g_object_notify_by_pspec(G_OBJECT(terminal), pspecs[PROP_DELETE_BINDING]);
 }
+
+/**
+ * vte_terminal_get_disable_bg_draw:
+ * @terminal: a #VteTerminal
+ *
+ * Determines whether the terminal will render the background or
+ * defer it to the application via the draw signal.
+ *
+ * Returns: %TRUE if background draw is disabled, %FALSE if not
+ */
+gboolean
+vte_terminal_get_disable_bg_draw(VteTerminal *terminal)
+{
+	g_return_val_if_fail(VTE_IS_TERMINAL(terminal), FALSE);
+	return IMPL(terminal)->m_disable_bg_draw;
+}
+
+/**
+ * vte_terminal_set_disable_bg_draw:
+ * @terminal: a #VteTerminal
+ * @is_disabled: %TRUE if the terminal should not draw the background
+ *
+ * Controls whether or not the terminal will beep when the child outputs the
+ * "bl" sequence.
+ */
+void
+vte_terminal_set_disable_bg_draw(VteTerminal *terminal,
+                              gboolean is_disabled)
+{
+        g_return_if_fail(VTE_IS_TERMINAL(terminal));
+
+        if (IMPL(terminal)->set_disable_bg_draw(is_disabled != FALSE))
+                g_object_notify_by_pspec(G_OBJECT(terminal), pspecs[PROP_DISABLE_BG_DRAW]);
+}
+
 
 /**
  * vte_terminal_get_encoding:
